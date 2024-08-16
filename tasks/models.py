@@ -6,12 +6,14 @@ class Category(models.Model):
     name = models.CharField(max_length=100)
 
     class Meta:
+        db_table = 'task_manager_category'
         ordering = ['name']
         verbose_name = "Category"
         verbose_name_plural = "Categories"
+        unique_together = ('name',)
 
     def __str__(self):
-        return f"Category: {self.name}"
+        return self.name
 
 class Task(models.Model):
     STATUS_CHOICES = [
@@ -31,12 +33,14 @@ class Task(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['-deadline']
+        db_table = 'task_manager_task'
+        ordering = ['-created_at']
         verbose_name = "Task"
         verbose_name_plural = "Tasks"
+        unique_together = ('title',)
 
     def __str__(self):
-        return f"Task: {self.title} (Status: {self.status})"
+        return self.title
 
 
 class SubTask(models.Model):
@@ -56,9 +60,11 @@ class SubTask(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['status', 'deadline']
+        db_table = 'task_manager_subtask'
+        ordering = ['-created_at']
         verbose_name = "SubTask"
         verbose_name_plural = "SubTasks"
+        unique_together = ('title',)
 
     def __str__(self):
-        return f"Subtask: {self.title} (Status: {self.status})"
+        return self.title

@@ -19,17 +19,17 @@ class TaskAdmin(admin.ModelAdmin):
     list_display = ('title', 'status', 'deadline', 'created_at')
     list_filter = ('status', 'created_at', 'deadline')
     search_fields = ('title', 'description')
-    ordering = ('-deadline',)
+    ordering = ('-created_at',)
     actions = [mark_tasks_done]
     inlines = [SubTaskInline]
 
 
 @admin.register(SubTask)
 class SubTaskAdmin(admin.ModelAdmin):
-    list_display = ('title', 'status', 'deadline', 'created_at', 'task')
+    list_display = ('title', 'task', 'status', 'deadline', 'created_at')
     list_filter = ('status', 'created_at', 'deadline')
     search_fields = ('title', 'description')
-    ordering = ('status', 'deadline')
+    ordering = ('-created_at',)
 
 
 @admin.register(Category)
