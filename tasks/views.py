@@ -4,8 +4,8 @@ from rest_framework.response import Response
 from django.db.models import Count
 from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Task
-from .serializers import TaskSerializer
+from .models import Task, SubTask
+from .serializers import TaskSerializer, SubTaskCreateSerializer
 
 
 class TaskCreateView(generics.CreateAPIView):
@@ -34,3 +34,13 @@ class TaskStatsView(APIView):
             'overdue_tasks': overdue_tasks
         }
         return Response(data)
+
+
+class SubTaskListCreateView(generics.ListCreateAPIView):
+    queryset = SubTask.objects.all()
+    serializer_class = SubTaskCreateSerializer
+
+
+class SubTaskDetailUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = SubTask.objects.all()
+    serializer_class = SubTaskCreateSerializer
