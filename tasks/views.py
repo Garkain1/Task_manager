@@ -5,21 +5,23 @@ from django.db.models import Count
 from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Task, SubTask
-from .serializers import TaskSerializer, SubTaskCreateSerializer
+from .serializers import SubTaskCreateSerializer, TaskCreateSerializer
+from rest_framework.pagination import PageNumberPagination
 
 
-class TaskCreateView(generics.CreateAPIView):
+class TaskListCreateView(generics.ListCreateAPIView):
     queryset = Task.objects.all()
-    serializer_class = TaskSerializer
-
-
-class TaskListView(generics.ListAPIView):
-    queryset = Task.objects.all()
-    serializer_class = TaskSerializer
-    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    serializer_class = TaskCreateSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['status', 'deadline']
-    ordering_fields = ['deadline']
-    pagination_class = None
+    search_fields = ['title', 'description']
+    ordering_fields = ['created_at']
+    pagination_class = PageNumberPagination
+
+
+class TaskDetailUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskCreateSerializer
 
 
 class TaskStatsView(APIView):
@@ -39,6 +41,11 @@ class TaskStatsView(APIView):
 class SubTaskListCreateView(generics.ListCreateAPIView):
     queryset = SubTask.objects.all()
     serializer_class = SubTaskCreateSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['status', 'deadline']
+    search_fields = ['title', 'description']
+    ordering_fields = ['created_at']
+    pagination_class = PageNumberPagination
 
 
 class SubTaskDetailUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):

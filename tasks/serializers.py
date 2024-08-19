@@ -4,12 +4,6 @@ from rest_framework.exceptions import ValidationError
 from django.utils import timezone
 
 
-class TaskSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Task
-        fields = '__all__'
-
-
 class SubTaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubTask
