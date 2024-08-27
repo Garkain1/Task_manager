@@ -1,12 +1,24 @@
-from rest_framework import generics, filters
+from rest_framework import generics, filters, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from django.db.models import Count
 from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Task, SubTask
-from .serializers import SubTaskCreateSerializer, TaskCreateSerializer
+from .models import Task, SubTask, Category
+from .serializers import SubTaskCreateSerializer, TaskCreateSerializer, CategoryCreateSerializer
 from rest_framework.pagination import PageNumberPagination
+
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategoryCreateSerializer
+
+    @action(detail=True, methods=['get'])
+    def count_tasks(self, request, pk=None):
+        category = self.get_object()
+        task_count = category.tasks.count()
+        return Response({'task_count': task_count})
 
 
 class TaskListCreateView(generics.ListCreateAPIView):
