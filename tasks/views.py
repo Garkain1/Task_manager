@@ -8,11 +8,13 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .models import Task, SubTask, Category
 from .serializers import SubTaskCreateSerializer, TaskCreateSerializer, CategoryCreateSerializer
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticated
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategoryCreateSerializer
+    permission_classes = [IsAuthenticated]
 
     @action(detail=True, methods=['get'])
     def count_tasks(self, request, pk=None):
@@ -29,14 +31,18 @@ class TaskListCreateView(generics.ListCreateAPIView):
     search_fields = ['title', 'description']
     ordering_fields = ['created_at']
     pagination_class = PageNumberPagination
+    permission_classes = [IsAuthenticated]
 
 
 class TaskDetailUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskCreateSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class TaskStatsView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         total_tasks = Task.objects.count()
         status_counts = Task.objects.values('status').annotate(count=Count('status'))
@@ -58,8 +64,10 @@ class SubTaskListCreateView(generics.ListCreateAPIView):
     search_fields = ['title', 'description']
     ordering_fields = ['created_at']
     pagination_class = PageNumberPagination
+    permission_classes = [IsAuthenticated]
 
 
 class SubTaskDetailUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = SubTask.objects.all()
     serializer_class = SubTaskCreateSerializer
+    permission_classes = [IsAuthenticated]
