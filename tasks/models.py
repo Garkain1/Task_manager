@@ -15,6 +15,7 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+
 class Task(models.Model):
     STATUS_CHOICES = [
         ('New', 'New'),
@@ -27,7 +28,7 @@ class Task(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     categories = models.ManyToManyField(Category, related_name='tasks')
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tasks')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='New')
     deadline = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -55,6 +56,7 @@ class SubTask(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='subtasks')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='subtasks')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='New')
     deadline = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)

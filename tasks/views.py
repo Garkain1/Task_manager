@@ -9,6 +9,7 @@ from .models import Task, SubTask, Category
 from .serializers import SubTaskCreateSerializer, TaskCreateSerializer, CategoryCreateSerializer
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
+from .permissions import IsAuthor
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -33,11 +34,14 @@ class TaskListCreateView(generics.ListCreateAPIView):
     pagination_class = PageNumberPagination
     permission_classes = [IsAuthenticated]
 
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
 
 class TaskDetailUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskCreateSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsAuthor]
 
 
 class TaskStatsView(APIView):
@@ -66,8 +70,11 @@ class SubTaskListCreateView(generics.ListCreateAPIView):
     pagination_class = PageNumberPagination
     permission_classes = [IsAuthenticated]
 
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
 
 class SubTaskDetailUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = SubTask.objects.all()
     serializer_class = SubTaskCreateSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsAuthor]

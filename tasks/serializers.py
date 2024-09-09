@@ -5,6 +5,8 @@ from django.utils import timezone
 
 
 class SubTaskSerializer(serializers.ModelSerializer):
+    author = serializers.ReadOnlyField(source='author.username')  # Поле только для чтения
+
     class Meta:
         model = SubTask
         fields = '__all__'
@@ -12,6 +14,7 @@ class SubTaskSerializer(serializers.ModelSerializer):
 
 class TaskDetailSerializer(serializers.ModelSerializer):
     subtasks = SubTaskSerializer(many=True, read_only=True)
+    author = serializers.ReadOnlyField(source='author.username')  # Поле только для чтения
 
     class Meta:
         model = Task
@@ -19,6 +22,8 @@ class TaskDetailSerializer(serializers.ModelSerializer):
 
 
 class TaskCreateSerializer(serializers.ModelSerializer):
+    author = serializers.ReadOnlyField(source='author.username')  # Поле только для чтения
+
     class Meta:
         model = Task
         fields = '__all__'
@@ -30,6 +35,8 @@ class TaskCreateSerializer(serializers.ModelSerializer):
 
 
 class SubTaskCreateSerializer(serializers.ModelSerializer):
+    author = serializers.ReadOnlyField(source='author.username')  # Поле только для чтения
+
     class Meta:
         model = SubTask
         fields = '__all__'
